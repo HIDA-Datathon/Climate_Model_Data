@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from netCDF4 import Dataset
 
-tropics = np.logical_and(lat > -23.43666, lat < 23.43666)
+# tropics = np.logical_and(lat > -23.43666, lat < 23.43666)
 
 
 def get_solar_data():
