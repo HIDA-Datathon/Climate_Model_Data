@@ -60,8 +60,8 @@ def filter_ts(AOD_min = -1e10, AOD_max = 1e10, TSI_min = -1e10, TSI_max = 1e10):
                 np.logical_and(TSI >= TSI_min, TSI < TSI_max)
             )
 
-def filter_geo(lon_min = -1e10, lon_max = 1e10, lat_min = -1e10, lat_max = 1e10):
-    return np.logical_and(
-                np.logical_and(lon >= lon_min, lon < lon_max),
-                np.logical_and(lat >= lat_min, lat < lat_max)
-            )
+def filter_lon(lon_min = -1e10, lon_max = 1e10):
+    return np.logical_and(lon >= lon_min, lon < lon_max)
+
+def filter_lat(lat_min = -1e10, lat_max = 1e10):
+    return np.logical_and(lat >= lat_min, lat < lat_max)
