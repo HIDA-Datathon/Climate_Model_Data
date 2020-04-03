@@ -11,7 +11,7 @@ def get_solar_data():
     t = data.variables['time'][:]
     TSI = data.variables['TSI'][:, 0, 0]
     data.close()
-    return t, TSI
+    return t.filled(), TSI.filled()
 
 
 def get_volcanic_data():
@@ -19,7 +19,10 @@ def get_volcanic_data():
     t = data.variables['time'][:]
     AOD = data.variables['AOD'][:, 0, 0]
     data.close()
-    return t, AOD
+    return t.filled(), AOD.filled()
+
+_, TSI = get_solar_data()
+_, AOD = get_volcanic_data()
 
 
 def get_geodata(number):
@@ -30,20 +33,35 @@ def get_geodata(number):
     lat = data.variables['lat'][:]
     T2m = data.variables['T2m'][:, :, :]
     data.close()
-    return t, lon, lat, T2m
+    return t.filled(), lon.filled(), lat.filled(), T2m.filled()
+
+_, lon, lat, T1 = get_geodata(1)
+_, _, _, T2 = get_geodata(2)
 
 
 def plot_forcing():
-    t, TSI = get_solar_data()
-    t, AOD = get_volcanic_data()
-
     plt.figure()
     plt.subplot(2, 1, 1)
-    plt.plot(t, TSI)
+    plt.plot(TSI)
     plt.subplot(2, 1, 2)
-    plt.plot(t, AOD)
+    plt.plot(AOD)
 
 
 def plot_geodata(t_index, data):
     plt.figure()
     plt.imshow(data[t_index, :, :], cmap='jet')
+    
+def normalize(x):
+    return (x-np.mean(x))/np.std(x)
+
+def filter_ts(AOD_min = -1e10, AOD_max = 1e10, TSI_min = -1e10, TSI_max = 1e10):
+    return np.logical_and(
+                np.logical_and(AOD >= AOD_min, AOD < AOD_max),
+                np.logical_and(TSI >= TSI_min, TSI < TSI_max)
+            )
+
+def filter_geo(lon_min = -1e10, lon_max = 1e10, lat_min = -1e10, lat_max = 1e10):
+    return np.logical_and(
+                np.logical_and(lon >= lon_min, lon < lon_max),
+                np.logical_and(lat >= lat_min, lat < lat_max)
+            )
